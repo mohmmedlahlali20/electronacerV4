@@ -25,7 +25,7 @@ public function insert($username, $email ,$password, $fullname, $phone_number, $
     $stmt->bindParam(":address", $address);
     $stmt->bindParam(":city", $city);
     $stmt->execute();
-    return true ;
+    
 }
 public function read() {
     $sql = "SELECT * FROM users";
@@ -78,6 +78,47 @@ public function totalRowCount(){
     
     return $t_rows;
 }
+}
+
+class loginPage
+{
+    private $validPages = ['login', 'register'];
+    private $defaultPage = 'login';
+
+    public function handleRequest()
+    {
+        if (isset($_GET['page'])) {
+            $page = $_GET['page'];
+
+            if ($this->isValidPage($page) && $this->pageExists($page)) {
+                $this->includePage($page);
+            } else {
+                $this->showError('Invalid page selected.');
+            }
+        } else {
+            $this->includePage($this->defaultPage);
+        }
+    }
+
+    private function isValidPage($page)
+    {
+        return in_array($page, $this->validPages);
+    }
+
+    private function pageExists($page)
+    {
+        return file_exists($page . '.php');
+    }
+
+    private function includePage($page)
+    {
+        include($page . '.php');
+    }
+
+    private function showError($message)
+    {
+        echo '<p class="alert alert-danger">' . $message . '</p>';
+    }
 }
 $ob = new Database();
 echo  $ob->totalRowCount();
