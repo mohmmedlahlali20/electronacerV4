@@ -2,28 +2,24 @@
 session_start();
 include 'db_cnx.php';
 
-// Check if the user is logged in
 if (!isset($_SESSION["user"])) {
     header("Location: login.php");
     exit();
 }
 
-// Fetch user information
 $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : '';
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
 
-// Fetch categories for the category filter
+
 $categoryQuery = "SELECT * FROM Categories";
 $categoryResult = mysqli_query($conn, $categoryQuery);
 $categories = mysqli_fetch_all($categoryResult, MYSQLI_ASSOC);
 
-// Initialize category, minPrice, maxPrice, and search filters
 $categoryFilter = isset($_GET['categoryFilter']) ? $_GET['categoryFilter'] : '';
 $minPriceFilter = isset($_GET['minPrice']) ? $_GET['minPrice'] : '';
 $maxPriceFilter = isset($_GET['maxPrice']) ? $_GET['maxPrice'] : '';
 $searchFilter = isset($_GET['search']) ? $_GET['search'] : '';
 
-// get the current page from the URL
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 // Define the number of products to display per page
 $productsPerPage = 6;

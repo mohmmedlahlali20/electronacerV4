@@ -1,7 +1,7 @@
 <?php
 require_once 'db_config.php';
-
-class Database {
+if (!class_exists('DataBase')) {
+class DataBase {
     private static $instance;
     private $connection;
 
@@ -12,7 +12,7 @@ class Database {
 
     public static function getInstance() {
         if (!self::$instance) {
-            self::$instance = new Database();
+            self::$instance = new DataBase();
         }
         return self::$instance;
     }
@@ -21,5 +21,8 @@ class Database {
         return $this->connection;
     }
 }
-
-?>
+}
+// Example usage
+$dataBase = DataBase::getInstance();
+$dbConnection = $dataBase->getConnection();
+var_dump($dbConnection);
