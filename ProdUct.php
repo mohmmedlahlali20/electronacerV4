@@ -12,7 +12,7 @@
         private $description;
         private $min_quantity;
         private $stock_quantity;
-         private $category_id;
+        private $category_id;
         private $disabled;
 
         public function __construct($product_id, $reference, $image, $barcode, $label, $purchase_price, $final_price , $price_offer , $description , $min_quantity ,$stock_quantity ,$category_id, $disabled)
@@ -313,27 +313,4 @@
         'category', 
         'disabled'        
     );
-    $io->setBarcode("code1234");
-    $io->setCategory("category1");
-    $io->setDescription("description");
-    $io->setDisabled(true);
-    $io->setFinal_price(1000);
-    $io->setImage("image");
-    $io->setLabel("label");
     
-    echo $io->getProduct_id();     
-    echo $io->getReference();
-    echo $io->getImage();
-    echo $io->getBarcode();
-    echo $io->getLabel();
-    echo $io->getPurchase_price();
-    echo $io->getFinal_price();
-    echo $io->getPrice_offer();
-    echo $io->getDescription();
-    echo $io->getMin_quantity();
-    echo $io->getStock_quantity();
-    echo $io->getCategory();
-    echo $io->getDisabled();
-    echo $io->getBarcode();
-
-    var_dump($io);

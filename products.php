@@ -1,6 +1,9 @@
 <?php
 session_start();
-include 'db_cnx.php';
+include_once 'connexion.php';
+include_once 'categoryDAO.php';
+
+
 
 if (!isset($_SESSION["user"])) {
     header("Location: login.php");
@@ -10,6 +13,8 @@ if (!isset($_SESSION["user"])) {
 $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : '';
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
 
+$categoryQuery = new CategoryDAO();
+$categoryQuery->selectData('*', $Categories, '');
 
 $categoryQuery = "SELECT * FROM Categories";
 $categoryResult = mysqli_query($conn, $categoryQuery);
@@ -21,7 +26,7 @@ $maxPriceFilter = isset($_GET['maxPrice']) ? $_GET['maxPrice'] : '';
 $searchFilter = isset($_GET['search']) ? $_GET['search'] : '';
 
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
-// Define the number of products to display per page
+
 $productsPerPage = 6;
 
 // Calculate the starting product index

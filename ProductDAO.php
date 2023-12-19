@@ -9,7 +9,7 @@ class fetchingdata {
     public function __construct() {
         $this->db = Database::getInstance()->getConnection();
     }
-
+ 
     public function get_product(){
         $query = "SELECT * FROM products";
         $stmt = $this->db->query($query);
@@ -41,7 +41,7 @@ class fetchingdata {
         return $Products;
     }
     
-    public function insert_product($Products){
+    public function UPDATE_Product($Products){
         $query = "UPDATE products 
           SET reference = '{$Products->getReference()}', 
               image = '{$Products->getImage()}',
@@ -56,21 +56,26 @@ class fetchingdata {
               category_id = '{$Products->getCategory_id()}',
               bl = {$Products->getBl()}
           WHERE reference = {$Products->getReference()}";
-        echo $query;
+        
         $stmt = $this->db->query($query);
         $stmt -> execute();
 
     }
 
-    public function update_product($Product){
-        $query = "UPDATE products SET `product_id`='".$Product->getProduct_id()."' `reference` ='".$Product->getReference()."', ìmage='".$Product->getImage()."',`barcode`='".$Product->getBarcode."', `label`='".$Product->getLabel()."',`purchase_price`=".$Product->getPurchase_price().",`final_price`=".$Product->getFinal_price().",`price_offer`=".$Product->getPrice_offer().",`description`='".$Product->getDescription()."',`min_quantity`=".$Product->getMin_quantity().",`stock_quantity`=".$Product->getStock_quantity().",`category_id`='".$Product->getCategory_id()."',`disabled`=".$Product->getDisabled()." WHERE `reference`= ".$Product->getReference();
-        echo $query;
+   
+
+    public function Insert_Product($Product) {
+        $query = "INSERT INTO products (`product_id`, `reference`, `image`, `barcode`, `label`, `purchase_price`, `final_price`, `price_offer`, `description`, `min_quantity`, `stock_quantity`, `category_id`, `disabled`) 
+                    VALUES ('".$Product->getProduct_id()."', '".$Product->getReference()."', '".$Product->getImage()."', '".$Product->getBarcode()."', '".$Product->getLabel()."', ".$Product->getPurchase_price().", ".$Product->getFinal_price().", ".$Product->getPrice_offer().", '".$Product->getDescription()."', ".$Product->getMin_quantity().", ".$Product->getStock_quantity().", '".$Product->getCategory_id()."', ".$Product->getDisabled().")";
+        
+
         $stmt = $this->db->query($query);
-        $stmt -> execute();
+        $stmt->execute();
+        return  $query;
     }
-    public function delete_product($id){
-        $query = "UPDATE `products` SET `bl`= 0 WHERE `reference`=" . $id ;
-        echo $query;
+    public function Delete_Product($id){
+        $query = "delete from products where  'id' = '$id' ";
+       
         $stmt = $this->db->query($query);
         $stmt -> execute();
     }
@@ -81,7 +86,3 @@ class fetchingdata {
 
 
 }
-$fetchingdata = new fetchingdata();
-echo '<pre>';
-print_r($fetchingdata->get_product());
-echo '</pre>';

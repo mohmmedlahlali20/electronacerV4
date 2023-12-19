@@ -11,10 +11,11 @@ class DataBase {
     }
 
     public static function getInstance() {
-        if (!self::$instance) {
-            self::$instance = new DataBase();
+        static $instance = null;
+        if ($instance === null) {
+            $instance = new self();
         }
-        return self::$instance;
+        return $instance;
     }
 
     public function getConnection() {
@@ -23,6 +24,4 @@ class DataBase {
 }
 }
 // Example usage
-$dataBase = DataBase::getInstance();
-$dbConnection = $dataBase->getConnection();
-var_dump($dbConnection);
+
