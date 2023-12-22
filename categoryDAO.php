@@ -1,67 +1,54 @@
-<?php 
-require_once  'category.php';
-require_once 'connexion.php';   
-class CategoryDAO{
-    private $db;
+<?php
+require_once 'connex_db.php';
+require_once 'category.php';
+class categoryDAO{
+  private $db;
 
-    public function __construct()
-    {
-        $this->db = Database::getInstance()->getConnection();
-    }
-   
-    public function selectData( $columns = '*',$tableName, $where = '') {
-        try {
-            $sql = "SELECT $columns FROM $tableName";
-            if (!empty($where)) {
-                $sql .= " WHERE $where";
-            }
-            $result = $this->db->query($sql);
-
-            $rows = $result->fetchAll(PDO::FETCH_ASSOC);
-
-            return $rows;
-        } catch (PDOException $e) {
-            echo "Selection failed: " . $e->getMessage();
-            return false;
-        }
-    }
-public function insertCategory($Category) {
-    $query = "INSERT INTO Categories (category_name, imag_category, is_desaybelsd) VALUES (?, ?, ?)";
-
-    $stmt = $this->db->prepare($query);
-
-    $categoryName = $Category->getCategory_name();
-    $imagCategory = $Category->getImag_category();
-    $isDesaybelsd = $Category->getIs_desaybelsd();
-
-    // Bind parameters
-    $stmt->bindParam(1, $categoryName);
-    $stmt->bindParam(2, $imagCategory);
-    $stmt->bindParam(3, $isDesaybelsd);
-    try {
-        $stmt->execute();
-
-        $lastInsertId = $this->db->lastInsertId();
-
-        return $lastInsertId;
-    } catch (Exception $e) {
-        // Handle database insertion failure
-        error_log('Database insertion error: ' . $e->getMessage());
-        return false;
-    } finally {
-        $stmt->closeCursor();
-    }
-}
-
-    
-    
-public function delete_category($id){
-  
-    $query ="UPDATE Categories SET is_desaybelsd = TRUE WHERE category_id = $id";
-    $stmt = $this->db->prepare($query);
+  public function __construct(){
+    $this->db = Database::getInstance()->gettconnection();
+  } 
+  public function getCategoryById($category_id){
+    $query = "SELECT * FROM categories WHERE category_id ='$category_id' ";
+    $stmt = $this->db->query($query);
     $stmt->execute();
+    $result = $stmt->fetch();
+    return $result;
 }
 
 
+    
+  public function get_categorys(){
+    $query = "SELECT * FROM categories where is_desaybelsd =0";
+    $stmt = $this->db->query($query);
+    $stmt -> execute();
+    $categorysData = $stmt->fetchAll();
+    $categorys = array();
+    foreach ( $categorysData as $cat) {
+        $categorys[] = new Category($cat["category_id"],$cat["category_name"],$cat["imag_category"], $cat["is_desaybelsd"]);
+    }
+    return $categorys;
 
 }
+  public function insert_category($category){
+    $query="INSERT INTO categories VALUES (0, '".$category->getCategoryName()."','".$category-> getImageCategory()."', '".$category-> isDisabled()."')  ";
+    $stmt = $this->db->query($query);
+      
+}
+public function updat_category( $category , $id){
+       $query="UPDATE categories set category_name='".$category->getCategoryName()."', imag_category='".$category-> getImageCategory()."' WHERE category_id = '$id'"  ;
+       $stmt = $this->db->query($query);
+       $stmt -> execute();
+}
+public function disaplay_category($id){
+    $query = "UPDATE categories SET is_desaybelsd = 1 WHERE category_id=" . $id ;
+    $stmt = $this->db->query($query);
+    $stmt -> execute();
+}
+public function delet_category($id){
+    $query = "DELETE FROM categories  WHERE category_id=" . $id ;
+    $stmt = $this->db->query($query);
+    $stmt -> execute();
+}
+
+}
+

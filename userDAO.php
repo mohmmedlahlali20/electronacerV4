@@ -1,126 +1,69 @@
+
 <?php
+require_once 'connex_db.php';
+require_once 'users.php';
 
-require_once 'connexion.php';
-require_once 'user.php';
-
-class UserDAO
-{
+class UserDAO{
     private $db;
-
-    public function __construct()
-    {
-        $this->db = Database::getInstance()->getConnection();
+  
+    public function __construct(){
+      $this->db = Database::getInstance()->gettconnection();
+    } 
+public function get_user_by_id($id){
+    $query="SELECT * FROM users where user_id ='$id' ";
+    $stmt = $this->db->query($query);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    return $result;
+}
+public function get_users(){
+    $query = "SELECT * FROM users ";
+    $stmt = $this->db->query($query);
+    $stmt -> execute();
+    $usersData = $stmt->fetchAll();
+    $userss = array();
+    foreach ( $usersData as $usr) {
+        $userss[] = new User($usr["user_id"],$usr["username"],$usr["email"], $usr["password"],$usr["role"], $usr["verified"],$usr["full_name"], $usr["phone_number"],$usr["address"], $usr["disabled"], $usr["city"]);
     }
+    return $userss;
 
-    public function select_Users($tableName, $columns = '*', $where = '')
-    {
-        try {
-            $sql = "SELECT $columns FROM $tableName";
-            
-            if (!empty($where)) {
-                $sql .= " WHERE $where";
-            }
-    
-            $stmt = $this->db->query($sql);
-            $stmt->execute();
-            $userData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
-            $users = [];
-    
-            foreach ($userData as $user) {
-                $users[] = new Users(
-                    $user["user_id"],
-                    $user["username"],
-                    $user["email"],
-                    $user["password"],
-                    $user["role"],
-                    $user["verified"],
-                    $user["full_name"],
-                    $user["phone_number"],
-                    $user["address"],
-                    $user["disabled"],
-                    $user["city"]
-                );
-            }
-    
-            return $users;
-        } catch (PDOException $e) {
-            echo "Selection failed: " . $e->getMessage();
-            return false;
-        }
-    }
-    
-    
-        public function insertUser($user)
-        {
-            $query = "INSERT INTO Users 
-                (username, email, password, role, verified, full_name, phone_number, address, disabled, city)
-                VALUES 
-                (:username, :email, :password, :role, :verified, :full_name, :phone_number, :address, :disabled, :city)";
-    
-            $stmt = $this->db->prepare($query);
-    
-            $stmt->bindValue(':username', $user->getUsername());
-            $stmt->bindValue(':email', $user->getEmail());
-            $stmt->bindValue(':password', $user->getPassword());
-            $stmt->bindValue(':role', $user->getRole());
-            $stmt->bindValue(':verified', $user->getVerified());
-            $stmt->bindValue(':full_name', $user->getFull_name());
-            $stmt->bindValue(':phone_number', $user->getPhone_number());
-            $stmt->bindValue(':address', $user->getAddress());
-            $stmt->bindValue(':disabled', $user->getDisabled());
-            $stmt->bindValue(':city', $user->getCity());
-            try {
-                $stmt->execute();
-    
-                $lastInsertId = $this->db->lastInsertId();
-    
-                return $lastInsertId;
-            } catch (Exception $e) {
-                // Handle database insertion failure
-                error_log('Database insertion error: ' . $e->getMessage());
-                return false;
-            } finally {
-                $stmt->closeCursor();
-            }
-        }
-    
+}
+public function get_chaked_user($email , $password ){
 
-    public function updateUsers($user)
-    {
-        $query = "UPDATE users SET 
-            `username`=:username, 
-            `email`=:email,
-            `password`=:password, 
-            `verified`=:verified,
-            `full_name`=:full_name,
-            `phone_number`=:phone_number,
-            `address`=:address,
-            `city`=:city
-            WHERE `user_id`=:user_id";
-
-        $stmt = $this->db->prepare($query);
-
-        $stmt->bindValue(':username', $user->getUsername());
-        $stmt->bindValue(':email', $user->getEmail());
-        $stmt->bindValue(':password', $user->getPassword());
-        $stmt->bindValue(':verified', $user->getVerified());
-        $stmt->bindValue(':full_name', $user->getFull_name());
-        $stmt->bindValue(':phone_number', $user->getPhone_number());
-        $stmt->bindValue(':address', $user->getAddress());
-        $stmt->bindValue(':city', $user->getCity());
-        $stmt->bindValue(':user_id', $user->getUser_id());
-
-        $stmt->execute();
-    }
-
-    public function deleteUser($id)
-{
-    $query = "DELETE FROM users WHERE `user_id` = :user_id";
-
-    $stmt = $this->db->prepare($query);
-    $stmt->bindValue(':user_id', $id);
-    
+    $query = "SELECT * FROM Users WHERE email = '$email' AND password = '$password' AND disabled = 0";
+    $stmt = $this->db->query($query);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    return $result;
 }
 
+public function insert_users($User){
+    $query="INSERT INTO users VALUES (0, '".$User->getUsername()."','".$User-> getEmail()."', '".$User-> getPassword()."','".$User->getRole()."','".$User-> isVerified()."','".$User->getFullName()."','".$User-> getPhoneNumber()."','".$User->getAddress()."','".$User-> isDisabled()."','".$User->getCity()."') ";
+    $result= $stmt = $this->db->query($query);
+    
+    return $result;
+  
+
+
+
+}
+public function delet_user($id){
+    $query = "DELETE FROM  users  WHERE user_id=" . $id ;
+    $stmt = $this->db->query($query);
+    $stmt -> execute();
+}
+public function verify_user($id){
+    $query = "UPDATE users SET disabled = 1 WHERE user_id=" . $id ;
+    $stmt = $this->db->query($query);
+    $stmt -> execute();
+}
+
+
+public function updat_users( $user , $id){
+    $query="UPDATE users  set user_id='".$user->getUserId()."', username='".$user-> getUsername()."',email='".$user->getEmail()."', password='".$user-> getPassword()."',       role='".$user->getRole()."', verified='".$user-> isVerified()."',full_name='".$user->getFullName()."', phone_number='".$user-> getPhoneNumber()."',      address='".$user-> getAddress()."',disabled='".$user->isDisabled()."', city='".$user-> getCity()."' WHERE user_id = '$id'"  ;
+    $stmt = $this->db->query($query);
+    $stmt -> execute();
+}
+
+// Add methods for insert, update, delete operations if needed
 }

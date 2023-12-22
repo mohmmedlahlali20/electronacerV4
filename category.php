@@ -1,107 +1,31 @@
-<?php 
- 
- require_once  'connexion.php';
- class Category{
+<?php
+
+class Category {
     private $category_id;
     private $category_name;
-    private $imag_category;
-    private $is_desaybelsd;
+    private $image_category;
+    private $is_disabled;
 
+    public function __construct($category_id, $category_name, $image_category, $is_disabled = false) {
+        $this->category_id = $category_id;
+        $this->category_name = $category_name;
+        $this->image_category = $image_category;
+        $this->is_disabled = $is_disabled;
+    }
 
-public function __construct($category_id,$category_name,$imag_category,$is_desaybelsd){
-
-    $this->category_id = $category_id;
-    $this->category_name = $category_name;
-    $this->imag_category = $imag_category;
-    $this->is_desaybelsd = $is_desaybelsd;
-
-
-
-
-        }
-
-
-
-
-    /**
-     * Get the value of category_id
-     */ 
-    public function getCategory_id()
-    {
+    public function getCategoryId() {
         return $this->category_id;
     }
 
-    /**
-     * Set the value of category_id
-     *
-     * @return  self
-     */ 
-    public function setCategory_id($category_id)
-    {
-        $this->category_id = $category_id;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of category_name
-     */ 
-    public function getCategory_name()
-    {
+    public function getCategoryName() {
         return $this->category_name;
     }
 
-    /**
-     * Set the value of category_name
-     *
-     * @return  self
-     */ 
-    public function setCategory_name($category_name)
-    {
-        $this->category_name = $category_name;
-
-        return $this;
+    public function getImageCategory() {
+        return $this->image_category;
     }
 
-    /**
-     * Get the value of imag_category
-     */ 
-    public function getImag_category()
-    {
-        return $this->imag_category;
+    public function isDisabled() {
+        return $this->is_disabled;
     }
-
-    /**
-     * Set the value of imag_category
-     *
-     * @return  self
-     */ 
-    public function setImag_category($imag_category)
-    {
-        $this->imag_category = $imag_category;
-
-        return $this;
-    }
-
-    /**
-     * Get the value of is_desaybelsd
-     */ 
-    public function getIs_desaybelsd()
-    {
-        return $this->is_desaybelsd;
-    }
-
-    /**
-     * Set the value of is_desaybelsd
-     *
-     * @return  self
-     */ 
-    public function setIs_desaybelsd($is_desaybelsd)
-    {
-        $this->is_desaybelsd = $is_desaybelsd;
-
-        return $this;
-    }
-
-    
- }
+}
